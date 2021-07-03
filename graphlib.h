@@ -3,7 +3,7 @@ void set_palette(unsigned char n,unsigned char b,unsigned char r,unsigned char g
 void set_bgcolor(unsigned char b,unsigned char r,unsigned char g); //バックグランドカラー設定
 void set_graphmode(unsigned char m); //グラフィックモード変更
 void init_textgraph(void); //テキスト機能利用準備
-void set_width(unsigned char m); //30文字モード(8ドットフォント)と40文字モード(6ドットフォント)の切り替え
+void set_width(unsigned char m); //8ドットフォントと6ドットフォントモードの切り替え
 
 void textredraw(void);
 	// テキスト画面再描画、テキストVRAMの内容にしたがって液晶に出力

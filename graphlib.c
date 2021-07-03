@@ -1,4 +1,4 @@
-//カラーグラフィックライブラリ
+//LCDテキスト・グラフィックライブラリ
 
 #include "graphlib.h"
 #include "LCDdriver.h"
@@ -244,7 +244,6 @@ void g_putfont(int x,int y,unsigned char c,int bc,unsigned char n)
 		p=FontData+n*8;
 	}
 	c1=palette[c];
-	if(bc>=0) bc=palette[bc];
 	for(;i<y+8;i++){
 		if(i>=Y_RES) return; //画面下部に切れる場合
 		d=*p++;
@@ -537,7 +536,7 @@ void stopPCG(void){
 void set_bgcolor(unsigned char b,unsigned char r,unsigned char g)
 {
 	bgcolor=((r>>3)<<11)+((g>>2)<<5)+(b>>3);
-
+	textredraw();
 }
 void init_textgraph(void){
 	//テキストモードでのグラフィックLCDライブラリの使用開始
@@ -547,7 +546,7 @@ void init_textgraph(void){
 	int i;
 	graphmode=0;//テキストモード
 	fontp=(unsigned char *)FontData;
-	twidth=WIDTH_X1;//30文字モード
+	twidth=WIDTH_X1;//8ドットフォントモード
 	set_bgcolor(0,0,0); //バックグランドカラーは黒
 	//カラーパレット初期化
 	for(i=0;i<8;i++){

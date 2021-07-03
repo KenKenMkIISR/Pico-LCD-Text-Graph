@@ -28,7 +28,9 @@ void main(void){
 	init_textgraph(); //液晶初期化、テキスト利用開始
 
 	unsigned int n=0;
+	set_bgcolor(255,255,255);
 	while(1){
+		setcursorcolor(n%7);
 		printnum(n++);
 		printchar(' ');
 	}
