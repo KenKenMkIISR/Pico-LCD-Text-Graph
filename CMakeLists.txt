@@ -15,6 +15,8 @@ add_executable(lcd-lib
 	ili9341_spi.c
 	graphlib.c
 	fontdata.c
+	ff.c
+	pico-sdmm.c
 )
 
 # Pull in basic dependencies

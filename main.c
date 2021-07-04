@@ -1,9 +1,18 @@
-// LCD ライブラリテスト
+// LCD ライブラリ、FatFs テスト
 
+#include <string.h>
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "LCDdriver.h"
 #include "graphlib.h"
+#include "ff.h"
+
+void disperror(unsigned char *s, FRESULT fr){
+	printstr(s);
+	printstr(" FRESULT:");
+	printnum(fr);
+	while(1);
+}
 
 void main(void){
     stdio_init_all();
@@ -27,11 +36,33 @@ void main(void){
 
 	init_textgraph(); //液晶初期化、テキスト利用開始
 
-	unsigned int n=0;
-	set_bgcolor(255,255,255);
-	while(1){
-		setcursorcolor(n%7);
-		printnum(n++);
-		printchar(' ');
+	// SDカード利用初期設定
+	FATFS FatFs;		/* FatFs work area needed for each volume */
+	FIL Fil;			/* File object needed for each open file */
+	FRESULT fr;
+	DIR dj;         /* Directory object */
+	FILINFO fno;    /* File information */
+
+	fr=f_mount(&FatFs, "", 0);		/* Give a work area to the default drive */
+	if(fr) disperror("SD Mount Error.",fr);
+
+	fr = f_findfirst(&dj, &fno, "", "*.BAS"); /* Start to search for BAS files */
+	if(fr) disperror("Findfirst Error.",fr);
+
+	int k,n=0;
+	while (fr == FR_OK && fno.fname[0]) {         /* Repeat while an item is found */
+		printstr(fno.fname);                /* Print the object name */
+		n++;
+		if(n%3){
+			k=13-strlen(fno.fname);
+			while(k--) printchar(' ');
+		}
+		else printchar('\n');
+		fr = f_findnext(&dj, &fno);               /* Search for next item */
+		if(fr) disperror("Findnext Error.",fr);
 	}
+	printstr("\nFound ");printnum(n);printstr(" files.");
+
+	f_closedir(&dj);
+
 }
