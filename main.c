@@ -7,6 +7,7 @@
 #include "graphlib.h"
 #include "ff.h"
 
+unsigned char linebuf[256];
 void disperror(unsigned char *s, FRESULT fr){
 	printstr(s);
 	printstr(" FRESULT:");
@@ -18,8 +19,8 @@ void main(void){
     stdio_init_all();
 
 	// 液晶用ポート設定
-    // Enable SPI at 20 MHz and connect to GPIOs
-    spi_init(LCD_SPICH, 20000 * 1000);
+    // Enable SPI at 40 MHz and connect to GPIOs
+    spi_init(LCD_SPICH, 40000 * 1000);
     gpio_set_function(LCD_SPI_RX, GPIO_FUNC_SPI);
     gpio_set_function(LCD_SPI_TX, GPIO_FUNC_SPI);
     gpio_set_function(LCD_SPI_SCK, GPIO_FUNC_SPI);
@@ -49,20 +50,32 @@ void main(void){
 	fr = f_findfirst(&dj, &fno, "", "*.BAS"); /* Start to search for BAS files */
 	if(fr) disperror("Findfirst Error.",fr);
 
+	// 最初に見つかったBASファイルの内容を液晶画面に表示
+	fr = f_open(&Fil, fno.fname, FA_READ);
+	if(fr) disperror("File open Error.",fr);
+	while(!f_eof(&Fil)){
+		if(f_gets(linebuf, 256, &Fil)==NULL) disperror("Read Line Error.",0);
+		printstr(linebuf);
+		if(strlen(linebuf)<255) printchar('\n');
+	}
+	fr = f_close(&Fil);
+
+	while(1);
+
+/*
 	int k,n=0;
-	while (fr == FR_OK && fno.fname[0]) {         /* Repeat while an item is found */
-		printstr(fno.fname);                /* Print the object name */
+	while (fr == FR_OK && fno.fname[0]) {   // Repeat while an item is found
+		printstr(fno.fname);                // Print the object name
 		n++;
 		if(n%3){
 			k=13-strlen(fno.fname);
 			while(k--) printchar(' ');
 		}
 		else printchar('\n');
-		fr = f_findnext(&dj, &fno);               /* Search for next item */
+		fr = f_findnext(&dj, &fno);               // Search for next item
 		if(fr) disperror("Findnext Error.",fr);
 	}
 	printstr("\nFound ");printnum(n);printstr(" files.");
-
 	f_closedir(&dj);
-
+*/
 }
