@@ -1,6 +1,8 @@
 # LCD text and graphic library for Raspberry Pi Pico with SD card
-ラズベリーパイPicoで液晶にテキストおよびグラフィックを描画するためのライブラリ。ChaN氏のFatFsを利用してSDカードアクセスも可能。
-  
+ラズベリーパイPicoで液晶にテキストおよびグラフィックを描画するためのライブラリ。対応液晶はILI9341搭載の320x240ドット、SPI接続のもの。  
+ChaN氏のFatFsを利用してSDカードアクセスも可能。Long File Nameには非対応。  
+サンプルプログラムではSDカードのファイル一覧を表示し、ボタンで選択してテキストとして表示。  
+
 ## 接続
 液晶  
 CS ----- GP13  
@@ -15,6 +17,14 @@ CS ------ GP17
 DI/MOSI - GP19  
 DO/MISO - GP16  
 SCLK ---- GP18  
+  
+ボタン（サンプルプログラム用）  
+UP ------ GP0  
+LEFT ---- GP1  
+RIGHT --- GP2  
+DOWN ---- GP3  
+START --- GP4  
+FIRE ---- GP5  
   
 ## 使い方
 main.cの初期化部分を参照してください。  
