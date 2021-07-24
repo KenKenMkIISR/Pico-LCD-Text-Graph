@@ -17,6 +17,7 @@ add_executable(lcd-lib
 	fontdata.c
 	ff.c
 	pico-sdmm.c
+	fileselect.c
 )
 
 # Pull in basic dependencies
