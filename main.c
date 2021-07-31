@@ -1,6 +1,7 @@
 // LCD ライブラリ、FatFs テスト
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 #include "LCDdriver.h"
@@ -52,8 +53,8 @@ void main(void)
 	stdio_init_all();
 
 	// 液晶用ポート設定
-	// Enable SPI at 40 MHz and connect to GPIOs
-	spi_init(LCD_SPICH, 40000 * 1000);
+	// Enable SPI at 32 MHz and connect to GPIOs
+	spi_init(LCD_SPICH, 32000 * 1000);
 	gpio_set_function(LCD_SPI_RX, GPIO_FUNC_SPI);
 	gpio_set_function(LCD_SPI_TX, GPIO_FUNC_SPI);
 	gpio_set_function(LCD_SPI_SCK, GPIO_FUNC_SPI);
@@ -68,7 +69,8 @@ void main(void)
 	gpio_put(LCD_RESET, 1);
 	gpio_set_dir(LCD_RESET, GPIO_OUT);
 
-	init_textgraph(); //液晶初期化、テキスト利用開始
+//	init_textgraph(HORIZONTAL); //液晶初期化、テキスト利用開始
+	init_textgraph(VERTICAL); //液晶初期化、テキスト利用開始
 
 	init_buttons(); //ボタンのI/O初期化
 
@@ -83,7 +85,22 @@ void main(void)
 		j+=dy;if(j<-20 || j>Y_RES+5) dy=-dy;
 	}
 */
-
+/*
+	// テキスト表示テスト
+	int i;
+	while(1){
+		set_lcdalign(HORIZONTAL);
+		for(i=0;i<30*100;i++){
+			setcursorcolor(rand()%7+1);
+			printchar('A'+rand()%26);
+		}
+		set_lcdalign(VERTICAL);
+		for(i=0;i<40*75;i++){
+			setcursorcolor(rand()%7+1);
+			printchar('A'+rand()%26);
+		}
+	}
+*/
 	// SDカード利用初期設定
 	FATFS FatFs; /* FatFs work area needed for each volume */
 	FIL Fil;	 /* File object needed for each open file */
