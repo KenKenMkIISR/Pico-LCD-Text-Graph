@@ -5,8 +5,7 @@
 
 unsigned char TVRAM[ATTROFFSET*2+1] __attribute__ ((aligned (4)));
 unsigned char *fontp; //フォント格納アドレス、初期化時はFontData、RAM指定することでPCGを実現
-unsigned int bgcolor; // バックグランドカラー
-unsigned char twidth; //テキスト1行文字数
+unsigned int bgcolor; // バックグランドカラー(RGB565)
 unsigned char *cursor;
 unsigned char cursorcolor;
 unsigned short palette[256];
@@ -286,7 +285,7 @@ void g_circlefill(int x0,int y0,unsigned int r,unsigned char c)
 void g_putfont(int x,int y,unsigned char c,int bc,unsigned char n)
 //8*8ドットのアルファベットフォント表示
 //座標(x,y)、カラーパレット番号c
-//bc:バックグランドカラー、負数の場合無視
+//bc:バックグランドカラー(RGB565)、負数の場合透明
 //n:文字番号
 {
 	int i,j,dx,dy;
@@ -501,6 +500,11 @@ void clearscreen(void)
 void g_clearscreen(void)
 {
 	LCD_Clear(0);
+}
+
+void putcursorchar(void){
+// カーソル位置の文字をテキストVRAMにしたがって液晶に出力
+	g_putfont(((cursor-TVRAM)%WIDTH_X)*8,((cursor-TVRAM)/WIDTH_X)*8,*(cursor+ATTROFFSET),bgcolor,*cursor);
 }
 
 void textredraw(void){

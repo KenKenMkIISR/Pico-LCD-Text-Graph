@@ -73,32 +73,44 @@ void main(void)
 	init_textgraph(VERTICAL); //液晶初期化、テキスト利用開始
 
 	init_buttons(); //ボタンのI/O初期化
-
 /*
-	// putbmpmn、clrbmpmnのテスト
-	int i=-20,j=-20,dx=1,dy=1;
 	while(1){
-		g_putbmpmn(i,j,14,13,Akabeibmp);
-		sleep_ms(20);
-		g_clrbmpmn(i,j,14,13);
-		i+=dx;if(i<-20 || i>X_RES+5) dx=-dx;
-		j+=dy;if(j<-20 || j>Y_RES+5) dy=-dy;
-	}
-*/
-/*
-	// テキスト表示テスト
-	int i;
-	while(1){
-		set_lcdalign(HORIZONTAL);
-		for(i=0;i<30*100;i++){
-			setcursorcolor(rand()%7+1);
-			printchar('A'+rand()%26);
+		// putbmpmn、clrbmpmnのテスト
+		int i=-15,j=-15,dx=1,dy=1,k=0,t;
+		while(1){
+			g_putbmpmn(i,j,14,13,Akabeibmp);
+			sleep_ms(10);
+			g_clrbmpmn(i,j,14,13);
+			i+=dx;if(i<-15 || i>X_RES) dx=-dx;
+			j+=dy;if(j<-15 || j>Y_RES) dy=-dy;
+			k++;
+			if(k==1000) break;
+			if(k%150==0){
+				if(LCD_ALIGNMENT==VERTICAL){
+					t=j;j=X_RES-i-14;i=t;
+					t=dx;dx=dy;dy=-t;
+				}
+				else{
+					t=j;j=i;i=Y_RES-t-13;
+					t=dx;dx=-dy;dy=t;
+				}
+				set_lcdalign(!LCD_ALIGNMENT);
+			}
 		}
-		set_lcdalign(VERTICAL);
-		for(i=0;i<40*75;i++){
-			setcursorcolor(rand()%7+1);
-			printchar('A'+rand()%26);
+		for(k=0;k<2;k++){
+		// テキスト表示テスト
+			set_lcdalign(HORIZONTAL);
+			for(i=0;i<40*60;i++){
+				setcursorcolor(rand()%7+1);
+				printchar('A'+rand()%26);
+			}
+			set_lcdalign(VERTICAL);
+			for(i=0;i<30*70;i++){
+				setcursorcolor(rand()%7+1);
+				printchar('A'+rand()%26);
+			}
 		}
+		set_lcdalign(!LCD_ALIGNMENT);
 	}
 */
 	// SDカード利用初期設定
